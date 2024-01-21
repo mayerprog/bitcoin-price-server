@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import cron from "node-cron";
+import saveBitcoinPrice from "./api/fetchPrice.js";
 
 dotenv.config();
 
@@ -14,6 +16,11 @@ mongoose.connect(process.env.DATABASE_URL);
 const db = mongoose.connection;
 db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Connected to Database"));
+
+cron.schedule("* * * * *", async () => {
+  console.log("Fetching and saving Bitcoin price...");
+  saveBitcoinPrice();
+});
 
 const PORT = process.env.PORT || 3000;
 
