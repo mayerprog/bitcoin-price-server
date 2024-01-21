@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cron from "node-cron";
 import saveBitcoinPrice from "./api/fetchPrice.js";
+import { BitcoinPrice } from "./schemas/bitcoinPrice.js";
 
 dotenv.config();
 
@@ -20,6 +21,11 @@ db.once("open", () => console.log("Connected to Database"));
 cron.schedule("* * * * *", async () => {
   console.log("Fetching and saving Bitcoin price...");
   saveBitcoinPrice();
+});
+
+app.get("/api/bitcoin-prices", async (req, res) => {
+  const prices = await BitcoinPrice.find().sort("date");
+  res.send(prices);
 });
 
 const PORT = process.env.PORT || 3000;
