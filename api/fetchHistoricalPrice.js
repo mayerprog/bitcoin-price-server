@@ -1,4 +1,11 @@
 import axios from "axios";
+import mongoose from "mongoose";
+import { BitcoinPrice } from "../schemas/bitcoinPrice.js";
+
+mongoose.connect(
+  "mongodb+srv://testUser:EzY0nF3yExhkDFk@cluster0.rsq4lu9.mongodb.net/bitcoinPriceDB?retryWrites=true&w=majority"
+);
+
 const formatDate = (date) => date.toISOString().split("T")[0];
 
 const fetchYearlyBitcoinPrice = async (year, month) => {
@@ -11,9 +18,17 @@ const fetchYearlyBitcoinPrice = async (year, month) => {
   try {
     const url = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${formattedStartDate}&end=${formattedEndDate}`;
     const response = await axios.get(url);
-
+    for (const [date, price] of Object.entries(response.data.bpi)) {
+      const histPrice = new BitcoinPrice({
+        price: price,
+        date: new Date(date),
+      });
+      await histPrice.save();
+    }
+    const priceFromDB = await BitcoinPrice.find();
+    // await BitcoinPrice.deleteMany();
     console.log(`Data for ${formattedStartDate} to ${formattedEndDate}:`);
-    console.log(response.data.bpi);
+    console.log("priceFromDB", priceFromDB);
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -21,3 +36,6 @@ const fetchYearlyBitcoinPrice = async (year, month) => {
 
 const result = await fetchYearlyBitcoinPrice(2024, 0);
 console.log(result);
+fetchYearlyBitcoinPrice(2024, 0)
+  .then(() => mongoose.disconnect())
+  .catch((err) => console.error("Error in fetching or saving data:", err));

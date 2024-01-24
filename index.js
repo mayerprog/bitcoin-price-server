@@ -32,6 +32,7 @@ app.get("/api/bitcoin-prices", async (req, res) => {
 app.get("/api/bitcoin-prices/:period", async (req, res) => {
   try {
     const { period } = req.params;
+    console.log("period", period);
     const prices = await fetchPricesByPeriod(period);
     res.json(prices);
   } catch (error) {

@@ -24,9 +24,13 @@ const getStartDate = (period) => {
 const fetchPricesByPeriod = async (period) => {
   try {
     const startDate = getStartDate(period);
+    startDate.setUTCHours(0, 0, 0, 0); // Adjust to the start of the day in UTC
+    console.log("startDate", startDate);
     const prices = await BitcoinPrice.find({
       date: { $gte: startDate },
     }).sort({ date: 1 }); // Сортировка по возрастанию даты
+    console.log("prices", prices);
+
     return prices;
   } catch (error) {
     console.error("Error fetching data from DB", error);
