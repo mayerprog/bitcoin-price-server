@@ -4,7 +4,7 @@ const getStartDate = (period) => {
   const date = new Date();
   switch (period) {
     case "day":
-      date.setDate(date.getDate() - 1);
+      date.setDate(date.getDate());
       break;
     case "week":
       date.setDate(date.getDate() - 7);
@@ -24,11 +24,11 @@ const getStartDate = (period) => {
 const fetchPricesByPeriod = async (period) => {
   try {
     const startDate = getStartDate(period);
-    startDate.setUTCHours(0, 0, 0, 0); // Adjust to the start of the day in UTC
-    console.log("startDate", startDate);
+    startDate.setUTCHours(0, 0, 0, 0);
+
     const prices = await BitcoinPrice.find({
       date: { $gte: startDate },
-    }).sort({ date: 1 }); // Сортировка по возрастанию даты
+    }).sort({ date: 1 });
     console.log("prices", prices);
 
     return prices;

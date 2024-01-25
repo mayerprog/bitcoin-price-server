@@ -20,7 +20,7 @@ db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Connected to Database"));
 
 // cron.schedule("* * * * *", async () => {
-//   console.log("Fetching and saving Bitcoin price...");
+//   console.log("Fetching and saving Bitcoin price every minute...");
 //   saveBitcoinPrice();
 // });
 
