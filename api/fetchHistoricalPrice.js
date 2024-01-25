@@ -2,9 +2,7 @@ import axios from "axios";
 import mongoose from "mongoose";
 import { BitcoinPrice } from "../schemas/bitcoinPrice.js";
 
-mongoose.connect(
-  "mongodb+srv://testUser:EzY0nF3yExhkDFk@cluster0.rsq4lu9.mongodb.net/bitcoinPriceDB?retryWrites=true&w=majority"
-);
+// mongoose.connect(process.env.DATABASE_URL);
 
 const formatDate = (date) => date.toISOString().split("T")[0];
 
@@ -36,6 +34,6 @@ const fetchYearlyBitcoinPrice = async (year, month) => {
 
 const result = await fetchYearlyBitcoinPrice(2024, 0);
 console.log(result);
-fetchYearlyBitcoinPrice(2024, 0)
-  .then(() => mongoose.disconnect())
-  .catch((err) => console.error("Error in fetching or saving data:", err));
+// fetchYearlyBitcoinPrice(2024, 0)
+//   .then(() => mongoose.disconnect())
+//   .catch((err) => console.error("Error in fetching or saving data:", err));
